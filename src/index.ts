@@ -4,7 +4,6 @@ import prisma from "./prisma.js";
 
 const app = new Hono();
 
-// ----------------- Customers -----------------
 app.post("/customers", async (c) => {
   const data = await c.req.json();
   const customer = await prisma.customers.create({ data });
@@ -52,7 +51,6 @@ app.get("/customers/top", async (c) => {
   return c.json(formattedCustomers);
 });
 
-// This should be after /customers/top
 app.get("/customers/:id", async (c) => {
   const id = Number(c.req.param("id"));
 
@@ -83,7 +81,6 @@ app.get("/customers/:id/orders", async (c) => {
   return c.json(orders);
 });
 
-// ----------------- Restaurants -----------------
 app.post("/restaurants", async (c) => {
   const data = await c.req.json();
   const restaurant = await prisma.restaurants.create({ data });
@@ -98,7 +95,6 @@ app.get("/restaurants/:id/menu", async (c) => {
   return c.json(menu);
 });
 
-// ----------------- Menu Items -----------------
 app.post("/restaurants/:id/menu", async (c) => {
   const restaurantId = Number(c.req.param("id"));
   const data = await c.req.json();
@@ -118,7 +114,6 @@ app.patch("/menu/:id", async (c) => {
   return c.json(updatedItem);
 });
 
-// ----------------- Orders -----------------
 app.post("/orders", async (c) => {
   const { customerId, restaurantId, items } = await c.req.json();
   let totalPrice = 0;
@@ -163,7 +158,7 @@ app.patch("/orders/:id/status", async (c) => {
   return c.json(order);
 });
 
-// ----------------- Reports & Insights -----------------
+
 app.get("/restaurants/:id/revenue", async (c) => {
   const id = Number(c.req.param("id"));
   const revenue = await prisma.orders.aggregate({
@@ -187,9 +182,6 @@ app.get("/menu/top-items", async (c) => {
   return c.json(menuItem);
 });
 
-
-
-// ----------------- Serve Application -----------------
 serve(
   {
     fetch: app.fetch,
